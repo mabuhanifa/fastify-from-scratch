@@ -9,7 +9,7 @@ app.register(mysql, {
   connectionString: process.env.DATABASE_URL,
 });
 
-app.get("/", (req, res) => {
+app.get("/users", (req, res) => {
   app.mysql.query("SELECT * FROM users", (err, data) => {
     if (err) {
       res.send({
@@ -24,6 +24,18 @@ app.get("/", (req, res) => {
     });
   });
 });
+
+app.get('/users/:id', function (req, res) {
+  const userId = req.params.id;
+  const query = 'SELECT * FROM users WHERE id = ?';
+  app.mysql.query(query, [userId], function (error, results, fields) {
+      if (error) throw error;
+      res.send(results);
+  });
+});
+
+
+
 
 app.listen({ port }, (err, address) => {
   if (err) {
